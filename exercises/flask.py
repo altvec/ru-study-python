@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 
 
 class FlaskExercise:
@@ -28,4 +29,27 @@ class FlaskExercise:
 
     @staticmethod
     def configure_routes(app: Flask) -> None:
-        pass
+        storage = {}
+
+        @app.route("/user", methods=["POST"])
+        def create_user() -> tuple:
+            name = request.json.get("name")
+            if name:
+                storage[name] = name
+                return {"data": f"User {name} is created!"}, 201
+            return {"errors": {"name": "This field is required"}}, 422
+
+        @app.route("/user/<username>", methods=["GET", "PATCH", "DELETE"])
+        def user(username: str) -> tuple:
+            if request.method == "DELETE":
+                storage.pop(username)
+                return "", 204
+            elif request.method == "GET":
+                if storage.get(username):
+                    return {"data": f"My name is {username}"}, 200
+                return "", 404
+            elif request.method == "PATCH":
+                new_name = request.json.get("name")
+                storage[username] = new_name
+                return {"data": f"My name is {new_name}"}, 200
+            return "", 500
