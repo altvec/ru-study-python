@@ -25,18 +25,18 @@ class ListExercise:
         return list(map(lambda x: max_value_item if x > 0 else x, input_list))
 
     @staticmethod
-    def recursive_search(input_list: list[int], query: int, min: int = 0, max: int = 0) -> int:
-        if min > max:
+    def recursive_search(input_list: list[int], query: int, left: int = 0, right: int = 0) -> int:
+        if left > right:
             return -1
 
-        mid = (min + max) // 2
+        mid = (left + right) // 2
 
         if input_list[mid] == query:
             return mid
         elif input_list[mid] > query:
-            return ListExercise.recursive_search(input_list, query, min, mid - 1)
+            return ListExercise.recursive_search(input_list, query, left, mid - 1)
         else:
-            return ListExercise.recursive_search(input_list, query, mid + 1, max)
+            return ListExercise.recursive_search(input_list, query, mid + 1, right)
 
     @staticmethod
     def search(input_list: list[int], query: int) -> int:
@@ -47,6 +47,6 @@ class ListExercise:
         :param query: Искомый элемент
         :return: Номер элемента
         """
-        min, max = 0, len(input_list) - 1
+        left, right = 0, len(input_list) - 1
 
-        return ListExercise.recursive_search(input_list, query, min, max)
+        return ListExercise.recursive_search(input_list, query, left, right)
