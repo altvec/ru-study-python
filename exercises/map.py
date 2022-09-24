@@ -3,6 +3,14 @@ from typing import Union
 
 class MapExercise:
     @staticmethod
+    def movies_rated_by_kinoposik(movies: list[dict], rating: Union[float, int] = 0) -> list:
+        return [
+            movie
+            for movie in movies
+            if movie["rating_kinopoisk"] != "" and float(movie["rating_kinopoisk"]) > rating
+        ]
+
+    @staticmethod
     def rating(list_of_movies: list[dict]) -> float:
         """
         !!Задание нужно решить используя map!!
@@ -12,7 +20,11 @@ class MapExercise:
         Ключи словаря: name, rating_kinopoisk, rating_imdb, genres, year, access_level, country
         :return: Средний рейтинг фильмов у которых две или больше стран
         """
-        pass
+        rated_movies = MapExercise.movies_rated_by_kinoposik(list_of_movies)
+        selected_movies = list(filter(lambda m: m if "," in m["country"] else None, rated_movies))
+        ratings = map(lambda m: float(m["rating_kinopoisk"]), selected_movies)
+
+        return sum(ratings) / len(selected_movies)
 
     @staticmethod
     def chars_count(list_of_movies: list[dict], rating: Union[float, int]) -> int:
@@ -26,4 +38,6 @@ class MapExercise:
         :return: Количество букв 'и' в названиях всех фильмов с рейтингом больше
         или равным заданному значению
         """
-        pass
+        rated_movies = MapExercise.movies_rated_by_kinoposik(list_of_movies, rating)
+
+        return sum(map(lambda m: m["name"].count("и"), rated_movies))
