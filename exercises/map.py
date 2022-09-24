@@ -21,8 +21,8 @@ class MapExercise:
         :return: Средний рейтинг фильмов у которых две или больше стран
         """
         rated_movies = MapExercise.movies_rated_by_kinoposik(list_of_movies)
-        selected_movies = list(filter(lambda m: len(m["country"].split(",")) >= 2, rated_movies))
-        ratings = [float(movie["rating_kinopoisk"]) for movie in selected_movies]
+        selected_movies = list(filter(lambda m: m if "," in m["country"] else None, rated_movies))
+        ratings = map(lambda m: float(m["rating_kinopoisk"]), selected_movies)
 
         return sum(ratings) / len(selected_movies)
 
